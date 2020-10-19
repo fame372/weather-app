@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<style>
+  h1{padding-top: 50px;
+    color:rgb(238, 175, 175);
+    display:block;
+    font-family:arial, sans-serif;
+    font-size:24px;
+    line-height:28.8px;
+    text-align:left;
+
+}
+
+h2,h3  { 
+    
+    color:rgb(238, 175, 175);
+display:block;
+font-family:arial, sans-serif;
+font-size:24px;
+line-height:28.8px;
+text-align:left;
+
+}
+
+ul {list-style-type: none;
+color:rgb(180, 121, 121);
+display:block;
+font-family:arial, sans-serif;
+font-size:24px;
+line-height:28.8px;
+text-align:left;
+}
+.tempreture { color :red;
+    font-size: 50px;
+        text-shadow: 0.5px 0.5px 2px rgba(0,0,0,.3);
+        -webkit-transition: color linear 100ms;
+        -o-transition: color linear 100ms;
+        transition: color linear 100ms;
+
+}
+.weather-app {
+    border:1px solid blue;
+    padding:15px;
+    margin:20px;
+    max-width:600px;
+    border-radius: 10px;
+}
+form{ color: brown;}
+</style>
+   
+   
+    <title>weather app</title>
+</head>
+<body>
+  <div class="container">
+    <div class="weather-app">
+  <form id = "search-form">
+
+  <input type = "text" placeholder="Type a city..." 
+   autofocus="on" 
+   autocomplete="off"
+   id= "search-text-input" />
+<input type ="submit" value="search" />
+
+<button>
+  Current
+</button>
+  </form>
+   <h1 id ="city">
+     Edmonton, Ab
+   </h1>
+
+    <h2>
+        Monday 18:00
+    </h2>
+   <h3 id="temperature-description"> sunny
+   </h3>
+      
+   <div class="row">
+       <div class="col-6">
+          <span id="tempreture">19</span>
+          °C
+    </div>
+
+        <div class="col-6">
+            <ul>
+                <li>
+                    Participation: <span id="Participation">0</span>
+                    % </li>
+                <li > 
+                    Humidity: <span id ="Humidity"> 77  </span> 
+                    %
+                </li>
+                <li >   
+                    wind:<span id = "Wind">8</span>
+
+                    Kg/H
+                    </li>
+                
+            </ul>
+       </div>
+
+   </div>
+  </div>
+
+<form>
+    <div class="form-group">
+      <label for="formControlRange">Temprature </label>
+      <input type="range" class="form-control-range" id="formControlRange">
+    </div>
+  </form>
+
+  <div class="row">
+    <div class="col-sm">
+      Monday 
+    </div>
+    <div class="col-sm">
+      Tuesday 
+    </div>
+    <div class="col-sm">
+      Wednesday 
+    </div>
+    <div class="row">
+    <div class="col-sm">
+    Thursday 
+    </div>
+    </div>
+</body>
+</div>
+<h6>
+  <a href="https://github.com/fame372/weather-app">open-sourcecode 
+  </a>
+  By Fahmo Ahmed
+
+</h6>
+<script>
+  let now = new Date();
+  let h2 = document.querySelector("h2");
+  
+  
+  let hour = now.getHours();
+  let minutes = now.getMinutes();
+  let days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  let day = days[now.getDay()];
+
+h2.innerHTML = `${day} ${hour}:${minutes}`
+
+
+
+
+function search(event) {
+  event.preventDefault();
+  let searchInput = document.querySelector("#search-text-input");
+  let h1 = document.querySelector("h1");
+  h1.innerHTML = searchInput.value;
+  searchCity(searchInput.value);
+}
+let form = document.querySelector("#search-form");
+
+form.addEventListener("submit", search);
+
+searchCity("Edmonton");
+
+function searchCity(city) {
+let apiKey = "9b8aa97c4b78075b51039339e3bab971";
+let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric`;
+
+axios.get(`${apiUrl}&appid=${apiKey}`).then(showTemperature);
+
+}
+
+function showTemperature(response) {
+  console.log(response.data);
+  document.querySelector("#Humidity").innerHTML = response.data.main.humidity;
+ document.querySelector("#Wind").innerHTML = response.data.wind.speed;
+ document.querySelector("#Participation").innerHTML = response.data.clouds.all;
+document.querySelector("#tempreture").innerHTML = Math.round(response.data.main.temp);
+ document.querySelector("#temperature-description").innerHTML = response.data.weather[0].description;
+}
+
+
+function showPosition(position) {
+  let h1 = document.querySelector("h1");
+  h1.innerHTML = `your latitude is ${position.coords.latitude} and your longitde is ${position.coords.longitude}`;
+}
+
+function getCurrentPosition() {
+  navigator.geolocation.getCurrentPosition(showPosition);
+}
+let button = document.querySelector("button");
+button.addEventListener("click", getCurrentPosition);
+
+
+
+
+</script>
+</html>
